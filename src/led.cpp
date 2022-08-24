@@ -8,19 +8,55 @@ void Led::setup() {
     FastLED.setBrightness(10);
 
     for(int i = 0; i < NUM_LEDS; i++) {
+        Led::ids[i] = CRGB::Blue;
+    }
+
+    FastLED.show();
+    delay(300);
+
+    for(int i = 0; i < NUM_LEDS; i++) {
         Led::ids[i].setRGB(0, 0, 0);
     }
 
     FastLED.show();
 }
 
-void Led::set_activity(bool val) {
-    Led::active = val;
+void Led::change_ambient(int status) {
+  switch (status)
+  {
+    case 5:
+
+      break;
+
+    case 4:
+
+      break;
+    
+    case 3:
+
+      break;
+
+    case 2:
+;
+      break;
+
+    case 1:
+
+      break;
+
+    case 0:
+    default:
+      for(int i = 0; i < NUM_LEDS; i++) {
+          Led::ids[i].setRGB(0, 0, 0);
+      }
+      FastLED.show();
+      break;
+  }
+
 }
 
 
 #define COOLING  55
-
 // SPARKING: What chance (out of 255) is there that a new spark will be lit?
 // Higher chance = more roaring fire.  Lower chance = more flickery fire.
 // Default 120, suggested range 50-200.
@@ -59,4 +95,3 @@ void Led::fire() {
 }
 
 CRGB Led::ids[NUM_LEDS];
-bool Led::active = false;

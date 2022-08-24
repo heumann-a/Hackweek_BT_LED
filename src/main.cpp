@@ -1,7 +1,6 @@
 // Global Imports 
 #include "config.h"
 #include "led.h"
-// #include "bluetooth_le.h"
 #include "bluetooth.h"
 
 /*---------------------------------
@@ -21,7 +20,7 @@ void setup() {
   Serial.println();
   Serial.println("Starting up...");
 
-  Blt::setup();
+  Blt::setup(false);
   Led::setup();
 }
 
@@ -30,10 +29,9 @@ void setup() {
 // -------------------------------
 void loop() {
   // put your main code here, to run repeatedly:
-
-  Serial.println("Test");
-  delay(2000);
-
+  delay(1000);
+  Blt::loop();
+  // Ble::loop();
 
 }
 
