@@ -1,14 +1,13 @@
+// Global Imports 
 #include "config.h"
-
-// User Imports 
 #include "led.h"
+// #include "bluetooth_le.h"
+#include "bluetooth.h"
 
 /*---------------------------------
   Author: Alex
   Date: 08/2022
-    
 -----------------------------------*/
-
 
 
 
@@ -16,7 +15,14 @@
 //    SETUP the LED and Bluetooth
 // -------------------------------
 void setup() {
-  // put your setup code here, to run once:
+  // Setup Debug Info and wait to get all Infos
+  Serial.begin(9600);
+  delay(500);
+  Serial.println();
+  Serial.println("Starting up...");
+
+  Blt::setup();
+  Led::setup();
 }
 
 // -------------------------------
@@ -25,8 +31,9 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
-  std::string command = "rainbow";
-
+  Serial.println("Test");
+  delay(2000);
 
 
 }
+
