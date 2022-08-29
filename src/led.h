@@ -13,6 +13,7 @@ class Led {
     public:
         
         static void setup();
+        static void color(CRGB);
         static void change_ambient(int);
 };
 

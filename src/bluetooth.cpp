@@ -27,19 +27,24 @@ void Blt::setup_blt() {
 }
 
 void Blt::loop() {
+  char input[50];
+  uint8_t index = 0;
 
-    char input[50];
-    uint8_t index = 0;
+  while (Blt::SerialBT.available() && index < 50)
+  {
+      input[index]= Blt::SerialBT.read();
+      // ---- For Debug -----
+      // Serial.write(input[index++]);;
+  }
 
-    while (Blt::SerialBT.available() && index < 50)
-    {
-        input[index]= Blt::SerialBT.read();
-        Serial.write(input[index++]);;
-    }
+  if (strcmp (input, "led_on") == 0)
+    Led::color(CRGB::White);
+  if (strcmp (input, "led_off") == 0)
+    Led::color(CRGB::Black);
 
-    int next_mode = atoi(input);
-    if ( next_mode <= AVAILABLE_MODES)
-        Led::change_ambient(next_mode);
+  int next_mode = atoi(input);
+  if (next_mode <= AVAILABLE_MODES)
+    Led::change_ambient(next_mode);
 
 }
 

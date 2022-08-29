@@ -3,22 +3,20 @@
 
 void Led::setup() {
 
-    FastLED.addLeds<LED_CHIPSET, LED_PORT, GRB>(Led::ids, 0, NUM_LEDS);
-    // 0-255 value range for 0-100%
-    FastLED.setBrightness(10);
+  FastLED.addLeds<LED_CHIPSET, LED_PORT, GRB>(Led::ids, 0, NUM_LEDS);
+  // 0-255 value range for 0-100%
+  FastLED.setBrightness(BRIGTHNESS);
 
-    for(int i = 0; i < NUM_LEDS; i++) {
-        Led::ids[i] = CRGB::Blue;
-    }
+  Led::color(CRGB::Blue);
+  delay(300);
+  Led::color(CRGB::Black);
+}
 
-    FastLED.show();
-    delay(300);
-
-    for(int i = 0; i < NUM_LEDS; i++) {
-        Led::ids[i].setRGB(0, 0, 0);
-    }
-
-    FastLED.show();
+void Led::color(CRGB new_color) {
+  for(int i = 0; i < NUM_LEDS; i++) {
+      Led::ids[i] = new_color;
+  }
+  FastLED.show();
 }
 
 void Led::change_ambient(int status) {
@@ -46,10 +44,7 @@ void Led::change_ambient(int status) {
 
     case 0:
     default:
-      for(int i = 0; i < NUM_LEDS; i++) {
-          Led::ids[i].setRGB(0, 0, 0);
-      }
-      FastLED.show();
+      Led::color(CRGB::Black);
       break;
   }
 
