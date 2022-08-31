@@ -9,8 +9,8 @@
 #endif
 
 /**
- * @brief Initialize the %BLE environment.
- * @param [in] blt_active The device name of the device.
+ * @brief Initialize the BLE or BLT environment.
+ * @param [in] blt_active Activates BLT if true.
  */
 /* STATIC */
 void Blt::setup(bool blt_active) {
@@ -26,65 +26,19 @@ void Blt::setup_blt() {
   Serial.println("Bluetooth Started! Ready to pair...");
 }
 
-void Blt::loop() {
-  char input[50];
-  uint8_t index = 0;
-
-  while (Blt::SerialBT.available() && index < 50)
-  {
-      input[index]= Blt::SerialBT.read();
-      // ---- For Debug -----
-      // Serial.write(input[index++]);;
-  }
-
-  if (strcmp (input, "led_on") == 0)
-    Led::color(CRGB::White);
-  if (strcmp (input, "led_off") == 0)
-    Led::color(CRGB::Black);
-
-  int next_mode = atoi(input);
-  if (next_mode <= AVAILABLE_MODES)
-    Led::change_ambient(next_mode);
-
-}
-
-class MyCallbacks: public BLECharacteristicCallbacks
-{
-  void onWrite(BLECharacteristic *pCharacteristic)
-  {
-    std::string value = pCharacteristic->getValue();
-    int next_mode = 0;
-
-    if (value.length() > 0)
-    {
-      Serial.println("*********");
-      Serial.print("New value: ");
-      for (int i = 0; i < value.length(); i++)
-      {
-        next_mode += (value[i] - 48) * pow10(i);
-        Serial.print(value[i]);
-      }
-      Serial.println();
-      Serial.println("*********");
-    }
-
-    if ( next_mode <= AVAILABLE_MODES)
-        Led::change_ambient(next_mode);
-  }
-};
 
 void Blt::setup_ble() {
 
   Serial.println("Startup BLE Server!");
 
-  BLEDevice::init("LED-Lampe");
-  BLEServer *pServer = BLEDevice::createServer();
-  BLEService *pService = pServer->createService(BLE_SERVICE_UUID);
+  BLEDevice::init(BT_DEVICENAME);
+  pServer_BLE = BLEDevice::createServer();
+  BLEService *pService = pServer_BLE->createService(BLE_SERVICE_UUID);
   BLECharacteristic *pCharacteristic = pService->createCharacteristic(
                                         BLE_CHARACTERISTIC_UUID,
                                         NIMBLE_PROPERTY::READ |
                                         NIMBLE_PROPERTY::WRITE 
-                                       );
+                                        );
 
   pCharacteristic->setValue("Hello World says Neil");
   pService->start();
@@ -99,6 +53,78 @@ void Blt::setup_ble() {
   Serial.println("Characteristic defined! Now you can read it in your phone!");
 }
 
+void Blt::next_command(std::string &value) {
+
+  // Cleanup if Newline Endcoding
+  if (!value.empty() && value.back() == '\n') {
+    value.pop_back();
+    // Check for Windows Encoding
+    if (value.back() == '\r')
+      value.pop_back();
+}
+  // For Debugging Purpose
+  if (value.length() > 0)
+  {
+    Serial.println("*********");
+    Serial.print("New value: ");
+    for (int i = 0; i < value.length(); i++)
+    {
+      Serial.print(value[i]);
+    }
+    Serial.println();
+    Serial.println("*********");
+  }
+
+  if (value.compare("led_on") == 0) 
+    Led::change_ambient(Config::current_mode);
+
+  if (value.compare("led_off") == 0)
+    Led::change_ambient(0);
+
+  if (value.compare("1") == 0) 
+    Config::current_mode = 1;
+
+  if (value.compare("2") == 0)
+    Config::current_mode = 2;
+
+  if (value.compare("3") == 0) 
+    Config::current_mode = 3;
+
+  if (value.compare("4") == 0) 
+    Config::current_mode = 4;
+
+  if (value.compare("5") == 0)
+    Config::current_mode = 5;
+  
+  Led::change_ambient(Config::current_mode);
+  Config::save();
+}
+
+void Blt::loop() {
+  char input[50] = {};
+  uint8_t index = 0;
+
+  while (Blt::SerialBT.available() && index < 50)
+  {
+      input[index++]= Blt::SerialBT.read();
+  }
+  
+  // Check if new Data was read
+  if (index >= 1) {
+    std::string str(input);
+    Blt::next_command(str);
+  }
+
+}
+
+class MyCallbacks: public BLECharacteristicCallbacks
+{
+  void onWrite(BLECharacteristic *pCharacteristic)
+  {
+    std::string value = pCharacteristic->getValue();
+    Blt::next_command(value);
+  }
+};
 
 NimBLEServer* Blt::pServer_BLE;
 BluetoothSerial Blt::SerialBT;

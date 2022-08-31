@@ -20,7 +20,8 @@ void setup() {
   Serial.println();
   Serial.println("Starting up...");
 
-  Blt::setup(false);
+  Config::load();
+  Blt::setup(true);
   Led::setup();
 }
 
@@ -29,9 +30,6 @@ void setup() {
 // -------------------------------
 void loop() {
   // put your main code here, to run repeatedly:
-  delay(1000);
   Blt::loop();
-  // Ble::loop();
-
 }
 

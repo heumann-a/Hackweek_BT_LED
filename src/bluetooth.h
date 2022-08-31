@@ -12,8 +12,9 @@ class Blt {
 
         static void setup_blt();
         static void setup_ble();
-    public:
 
+    public:
+        static void next_command(std::string &);
         static void setup(bool);
         static void loop();
 };
