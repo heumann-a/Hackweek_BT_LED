@@ -10,11 +10,13 @@ class Led {
         static CRGB ids[];
 
         static void fire();
+        static void rainbow(uint8_t, uint8_t);
     public:
         
+        static int display_mode;
         static void setup();
         static void color(CRGB);
-        static void change_ambient(int);
+        static void animation_color(int);
 };
 
 #endif

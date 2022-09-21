@@ -2,6 +2,7 @@
 #include <ArduinoJson.h>
 
 #include "config.h"
+#include "led.h"
 
 #define CFG_CURRENT_MODE "current_mode"
 #define FILENAME "/led_config.json"
@@ -15,8 +16,9 @@ void Config::save() {
     }  
 
     StaticJsonDocument<256> doc;
-    doc[CFG_CURRENT_MODE] = Config::current_mode;
+    doc[CFG_CURRENT_MODE] = Led::display_mode;
 
+    Config::current_mode = Led::display_mode;
 }
 
 void Config::load() {

@@ -55,7 +55,7 @@ void Blt::setup_ble() {
 
 void Blt::next_command(std::string &value) {
 
-  // Cleanup if Newline Endcoding
+  // Cleanup if Newline Endcoding is there
   if (!value.empty() && value.back() == '\n') {
     value.pop_back();
     // Check for Windows Encoding
@@ -76,27 +76,26 @@ void Blt::next_command(std::string &value) {
   }
 
   if (value.compare("led_on") == 0) 
-    Led::change_ambient(Config::current_mode);
+    Led::display_mode = Config::current_mode;
 
   if (value.compare("led_off") == 0)
-    Led::change_ambient(0);
+    Led::display_mode = 0;
 
   if (value.compare("1") == 0) 
-    Config::current_mode = 1;
+    Led::display_mode = 1;
 
   if (value.compare("2") == 0)
-    Config::current_mode = 2;
+    Led::display_mode = 2;
 
   if (value.compare("3") == 0) 
-    Config::current_mode = 3;
+    Led::display_mode = 3;
 
   if (value.compare("4") == 0) 
-    Config::current_mode = 4;
+    Led::display_mode = 4;
 
   if (value.compare("5") == 0)
-    Config::current_mode = 5;
+    Led::display_mode = 5;
   
-  Led::change_ambient(Config::current_mode);
   Config::save();
 }
 

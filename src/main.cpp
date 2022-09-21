@@ -31,5 +31,6 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   Blt::loop();
+  Led::animation_color(Config::current_mode);
 }
 

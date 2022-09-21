@@ -19,7 +19,7 @@ void Led::color(CRGB new_color) {
   FastLED.show();
 }
 
-void Led::change_ambient(int status) {
+void Led::animation_color(int status) {
 
   switch (status)
   {
@@ -28,11 +28,11 @@ void Led::change_ambient(int status) {
       break;
 
     case 1:
-
+      Led::color(CRGB::Aquamarine);
       break;
 
     case 2:
-
+      Led::color(CRGB::DarkRed);
       break;
     
     case 3:
@@ -40,11 +40,13 @@ void Led::change_ambient(int status) {
       break;
 
     case 4:
-
+      static uint8_t gHue = 0;
+      Led::rainbow(gHue, 7);
+      EVERY_N_MILLISECONDS( 20 ) { gHue++; }
       break;
 
     case 5:
-
+      Led::fire();
       break;
 
     default:
@@ -55,6 +57,18 @@ void Led::change_ambient(int status) {
 
 }
 
+
+void Led::rainbow(uint8_t initialhue, uint8_t deltahue) {
+
+  CHSV hsv;
+  hsv.hue = initialhue;
+  hsv.val = 255;
+  hsv.sat = 240;
+  for( int i = 0; i < NUM_LEDS; ++i) {
+      Led::ids[i] = hsv;
+      hsv.hue += deltahue;
+  }
+}
 
 #define COOLING  55
 // SPARKING: What chance (out of 255) is there that a new spark will be lit?
@@ -95,3 +109,4 @@ void Led::fire() {
 }
 
 CRGB Led::ids[NUM_LEDS];
+int Led::display_mode = 0;
