@@ -45,29 +45,33 @@ void Blt::next_command(std::string &value) {
 
   // Schleife zum Vergleichen der LED Modi (AN = led_on) und (AUS = led_off)
   if (value.compare("led_on") == 0) 
-    Led::display_mode = LED_CASE_1;
+    Led::display_mode = 1;
   else if (value.compare("led_off") == 0)
-    Led::display_mode = LED_CASE_OFF;
+    Led::display_mode = 0;
 
   //Else-if Statements zum aendern der Fabe von den LEDs
-  else if (value.compare("blau") == 0) 
+  else if (value.compare(BEFEHL_FARBE_BLAU) == 0) 
     Led::basis_farbe = CRGB::Aquamarine;
-  else if (value.compare("rot") == 0)
+  else if (value.compare(BEFEHL_FARBE_ROT) == 0)
     Led::basis_farbe = CRGB::DarkRed;
-  else if (value.compare("gruen") == 0) 
+  else if (value.compare(BEFEHL_FARBE_GRUEN) == 0) 
     Led::basis_farbe = CRGB::DarkGreen;
-  else if (value.compare("honiggelb") == 0) 
+  else if (value.compare(BEFEHL_FARBE_GELB) == 0) 
     Led::basis_farbe = CRGB::Yellow;
+  else if (value.compare(BEFEHL_FARBE_VIOLET) == 0) 
+    Led::basis_farbe = CRGB::DarkViolet;
+  else if (value.compare(BEFEHL_FARBE_ROSA) == 0) 
+    Led::basis_farbe = CRGB::MistyRose;
 
   // Else-if Statements zum aendern des Modus der LEDs
-  else if (value.compare("einfarbig") == 0)
-    Led::display_mode = LED_CASE_1;
-  else if (value.compare("regenbogen") == 0)
-    Led::display_mode = LED_CASE_2;
-  else if (value.compare("lauflicht") == 0)
-    Led::display_mode = LED_CASE_3;
-  else if (value.compare("rampe") == 0)
-    Led::display_mode = LED_CASE_4;
+  else if (value.compare(BEFEHL_MODUS_1) == 0)
+    Led::display_mode = 1;
+  else if (value.compare(BEFEHL_MODUS_1) == 0)
+    Led::display_mode = 2;
+  else if (value.compare(BEFEHL_MODUS_1) == 0)
+    Led::display_mode = 3;
+  else if (value.compare(BEFEHL_MODUS_1) == 0)
+    Led::display_mode = 4;
 }
 
 /**

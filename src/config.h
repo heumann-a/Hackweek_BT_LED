@@ -8,17 +8,18 @@
 #define BRIGTHNESS  50
 
 #define BT_DEVICENAME           "LED-Lampe"
-#define BLE_SERVICE_UUID        "dead"
-#define BLE_CHARACTERISTIC_UUID "beaf"
 
+#define BEFEHL_FARBE_BLAU   "blau"
+#define BEFEHL_FARBE_ROT    "rot"
+#define BEFEHL_FARBE_GRUEN  "gruen"
+#define BEFEHL_FARBE_GELB   "gelb"
+#define BEFEHL_FARBE_VIOLET "violet"
+#define BEFEHL_FARBE_ROSA   "rosa"
 
-#define LED_CASE_OFF    0
-#define LED_CASE_1      1
-#define LED_CASE_2      2
-#define LED_CASE_3      3
-#define LED_CASE_4      4
-#define LED_CASE_5      5
-#define LED_CASE_6      6
-
+#define BEFEHL_MODUS_1      "einfarbig"
+#define BEFEHL_MODUS_2      "regenbogen"
+#define BEFEHL_MODUS_3      "lauflicht"
+#define BEFEHL_MODUS_4      "rampe"
+#define BEFEHL_MODUS_5      "platzhalter"
 
 #endif
