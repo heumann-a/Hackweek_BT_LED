@@ -1,3 +1,4 @@
+// Klasse des Bluetooth-Gerätes
 #ifndef BLUETOOTH_H
 #define BLUETOOTH_H
 

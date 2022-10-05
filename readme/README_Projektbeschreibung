@@ -1,0 +1,18 @@
+DIY LED Panel
+
+Projektbeschreibung:
+In diesem Projekt wurde mit einem ESP32 Mikrocontroller, LED Streifen und einem Bilderrahmen eine durch Bluetooth steuerbare Lampe erstellt.
+
+// Datenstruktur des LED Panel Projekts der CodeWeek
+
+Wichtige Dateien für Programmierung der Lampenfunktionen inklusive der Bluetoothfunktion
+# src
+
+* [bluetooth.cpp](.\src\bluetooth.cpp)
+* [bluetooth.h](.\src\bluetooth.h)
+* [config.h](.\src\config.h)
+* [led.cpp](.\src\led.cpp)
+* [led.h](.\src\led.h)
+* [main.cpp](.\src\main.cpp)
+
+https://gcc.gnu.org/onlinedocs/cpp/Header-Files.html
