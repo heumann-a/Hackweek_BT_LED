@@ -16,7 +16,7 @@ class Led {
         static int display_mode;
         static void setup();
         static void color(CRGB);
-        static void animation_color(int);
+        static void animation_loop();
 };
 
 #endif

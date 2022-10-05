@@ -10,7 +10,6 @@ class Blt {
         static BLEServer* pServer_BLE;
         static BluetoothSerial SerialBT;
 
-        static void setup_blt();
         static void setup_ble();
 
     public:
