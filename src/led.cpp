@@ -3,7 +3,7 @@
 
 
 /**
- * @brief Initialisiert LED-Streifen mit spezifierten Infos aus der Konfig
+ * @brief Initialisiert LED-Streifen mit spezifierten Infos aus der config
  */
 void Led::setup() {
 
@@ -30,7 +30,7 @@ void Led::color(CRGB new_color) {
 }
 
 /**
- * @brief Schleife, die prueft welcher Modus aktuell genutzt wird und führt dementsprechend die Funktion aus
+ * @brief Switch-Statement, das prueft welcher Modus aktuell genutzt wird. Führt dementsprechend die Funktion aus.
  */
 void Led::animation_loop() {
   
@@ -82,9 +82,10 @@ void Led::animation_loop() {
 }
 
 /**
- * @brief Generiert einen Regenbogeneffekt ueber den kompletten Streifen mittles HSV farben
- * @param [in] initialhue Nächste HSV Farbwert für erste LED
- * @param [in] deltahue Abstufung der Farben mit Deltawert
+ * @brief Generiert einen Regenbogeneffekt ueber den kompletten Streifen mittles HSV des Farbspektrums
+ * @param [in] initialhue Nächste HSV Farbwert für die erste LED
+ * @param [in] deltahue Abstufung der Farben mit Delta E (auch Delta Wert genannt, dies ist ein Maß für den empfundenen Farbabstand(die Farbdifferenz),
+ *  mit diesem können Farben leichter durch Zahlen beschrieben werden) 
  */
 void Led::rainbow(uint8_t initialhue, uint8_t deltahue) {
 

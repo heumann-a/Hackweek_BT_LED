@@ -1,3 +1,4 @@
+// Konfigurations Datei für den Code des ESP-Moduls
 #ifndef LED_CONFIG_H
 #define LED_CONFIG_H
 
