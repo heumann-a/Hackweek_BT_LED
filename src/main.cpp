@@ -1,4 +1,4 @@
-// Global Imports 
+// Projekt Imports
 #include "config.h"
 #include "led.h"
 #include "bluetooth.h"
@@ -11,26 +11,25 @@
 
 
 // -------------------------------
-//    SETUP the LED and Bluetooth
+//    INITIALISIEREN von LED-Streifen und Bluetooth
 // -------------------------------
 void setup() {
-  // Setup Debug Info and wait to get all Infos
+  // Initialisieren der Kommunikation
   Serial.begin(9600);
   delay(500);
-  Serial.println();
   Serial.println("Starting up...");
 
-  Config::load();
-  Blt::setup(true);
+  // Funktion für Bluetooth
+  Blt::setup();
+  // Funktion für LED-Streifen
   Led::setup();
 }
 
 // -------------------------------
-//    Loop for updating and animation
+//    DAUERSCHLEIFE fuer Logik
 // -------------------------------
 void loop() {
-  // put your main code here, to run repeatedly:
   Blt::loop();
-  Led::animation_color(Config::current_mode);
+  Led::animation_loop();
 }
 

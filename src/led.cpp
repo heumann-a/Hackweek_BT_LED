@@ -1,6 +1,10 @@
 #include "led.h"
 #include "config.h"
 
+
+/**
+ * @brief Initialisiert LED-Streifen mit spezifierten Infos aus der Konfig
+ */
 void Led::setup() {
 
   FastLED.addLeds<LED_CHIPSET, LED_PORT, GRB>(Led::ids, 0, NUM_LEDS);
@@ -12,6 +16,10 @@ void Led::setup() {
   Led::color(CRGB::Black);
 }
 
+/**
+ * @brief Färbt alle LEDs mit der spezifizierten Farbe
+ * @param [in] CRGB Neue Farbe
+ */
 void Led::color(CRGB new_color) {
   for(int i = 0; i < NUM_LEDS; i++) {
       Led::ids[i] = new_color;
@@ -19,9 +27,12 @@ void Led::color(CRGB new_color) {
   FastLED.show();
 }
 
-void Led::animation_color(int status) {
+/**
+ * @brief Schleife, die prueft welcher Modus aktuell genutzt wird und führt dementsprechend die Funktion aus
+ */
+void Led::animation_loop() {
 
-  switch (status)
+  switch (Led::display_mode)
   {
     case 0:
       Led::color(CRGB::Black);
@@ -36,17 +47,17 @@ void Led::animation_color(int status) {
       break;
     
     case 3:
-      
+      Led::color(CRGB::DarkGreen);
       break;
 
     case 4:
-      static uint8_t gHue = 0;
-      Led::rainbow(gHue, 7);
-      EVERY_N_MILLISECONDS( 20 ) { gHue++; }
+      Led::color(CRGB::Honeydew);
       break;
 
     case 5:
-      Led::fire();
+      static uint8_t gHue = 0;
+      Led::rainbow(gHue, 12);
+      EVERY_N_MILLISECONDS( 20 ) { gHue++; }
       break;
 
     default:
@@ -57,7 +68,11 @@ void Led::animation_color(int status) {
 
 }
 
-
+/**
+ * @brief Generiert einen Regenbogeneffekt ueber den kompletten Streifen mittles HSV farben
+ * @param [in] initialhue Nächste HSV Farbwert für erste LED
+ * @param [in] deltahue Abstufung der Farben mit Deltawert
+ */
 void Led::rainbow(uint8_t initialhue, uint8_t deltahue) {
 
   CHSV hsv;
@@ -68,44 +83,7 @@ void Led::rainbow(uint8_t initialhue, uint8_t deltahue) {
       Led::ids[i] = hsv;
       hsv.hue += deltahue;
   }
-}
-
-#define COOLING  55
-// SPARKING: What chance (out of 255) is there that a new spark will be lit?
-// Higher chance = more roaring fire.  Lower chance = more flickery fire.
-// Default 120, suggested range 50-200.
-#define SPARKING 120
-void Led::fire() {
-    static uint8_t heat[NUM_LEDS];
-    bool gReverseDirection = false;
-
-    // Step 1.  Cool down every cell a little
-    for( int i = 0; i < NUM_LEDS; i++) {
-      heat[i] = qsub8( heat[i],  random8(0, ((COOLING * 10) / NUM_LEDS) + 2));
-    }
-  
-    // Step 2.  Heat from each cell drifts 'up' and diffuses a little
-    for( int k= NUM_LEDS - 1; k >= 2; k--) {
-      heat[k] = (heat[k - 1] + heat[k - 2] + heat[k - 2] ) / 3;
-    }
-    
-    // Step 3.  Randomly ignite new 'sparks' of heat near the bottom
-    if( random8() < SPARKING ) {
-      int y = random8(7);
-      heat[y] = qadd8( heat[y], random8(160,255) );
-    }
-
-    // Step 4.  Map from heat cells to LED colors
-    for( int j = 0; j < NUM_LEDS; j++) {
-      CRGB color = HeatColor( heat[j]);
-      int pixelnumber;
-      if( gReverseDirection ) {
-        pixelnumber = (NUM_LEDS-1) - j;
-      } else {
-        pixelnumber = j;
-      }
-      Led::ids[pixelnumber] = color;
-    }
+  FastLED.show();
 }
 
 CRGB Led::ids[NUM_LEDS];
