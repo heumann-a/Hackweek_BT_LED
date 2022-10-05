@@ -12,8 +12,10 @@ void Led::setup() {
   FastLED.setBrightness(BRIGTHNESS);
 
   Led::color(CRGB::Blue);
-  delay(300);
+  FastLED.show();
+  delay(1000);
   Led::color(CRGB::Black);
+  FastLED.show();
 }
 
 /**
@@ -31,33 +33,44 @@ void Led::color(CRGB new_color) {
  * @brief Schleife, die prueft welcher Modus aktuell genutzt wird und führt dementsprechend die Funktion aus
  */
 void Led::animation_loop() {
-
+  
   switch (Led::display_mode)
   {
-    case 0:
+    case LED_CASE_OFF:
       Led::color(CRGB::Black);
       break;
 
-    case 1:
-      Led::color(CRGB::Aquamarine);
+    case LED_CASE_1:
+      Led::color(Led::basis_farbe);
       break;
 
-    case 2:
-      Led::color(CRGB::DarkRed);
-      break;
-    
-    case 3:
-      Led::color(CRGB::DarkGreen);
-      break;
-
-    case 4:
-      Led::color(CRGB::Honeydew);
-      break;
-
-    case 5:
+    case LED_CASE_2:
       static uint8_t gHue = 0;
       Led::rainbow(gHue, 12);
       EVERY_N_MILLISECONDS( 20 ) { gHue++; }
+      break;
+
+    case LED_CASE_3:
+      static uint8_t lauflicht_base = 0;
+      Led::lauflicht(lauflicht_base);
+      EVERY_N_MILLISECONDS( 100 ) { lauflicht_base = (++lauflicht_base) % NUM_LEDS; }
+      break;
+
+    case LED_CASE_4:
+      static bool increment = true;
+      static uint8_t hoehe = 0;
+      Led::hoch_runter(hoehe);
+      EVERY_N_MILLISECONDS( 100 ) { 
+        if (increment){
+          ++hoehe;
+          if(hoehe == NUM_LEDS)
+            increment = false;
+        } else {
+          --hoehe;
+          if(hoehe == 0)
+            increment = true;
+        }
+       }
       break;
 
     default:
@@ -86,5 +99,36 @@ void Led::rainbow(uint8_t initialhue, uint8_t deltahue) {
   FastLED.show();
 }
 
+/**
+ * @brief Lässt einen Punkt über die LED Leiste laufen.
+ * @param [in] startindex Aktuelle LED die den Start des Punktes darstellt.
+ */
+void Led::lauflicht(uint8_t startindex) {
+
+  const uint8_t spannweite = 2;
+  for( int i = 0; i < NUM_LEDS; ++i) {
+    Led::ids[i] = Led::basis_farbe;
+    if( i >= startindex && i <= (startindex + spannweite))
+      Led::ids[i] = CRGB::White;
+  }
+  FastLED.show();
+}
+
+/**
+ * @brief (De)aktiviert die LEDS in der Reihe nach bis alle oder keins mehr leuchtet (Rampenmäßig)
+ * @param [in] hoehe Aktueller Wert bis zu diesem die LED angeschalten werden
+ */
+void Led::hoch_runter(uint8_t hoehe) {
+
+  for( int i = 0; i < NUM_LEDS; ++i) {
+    if (i <= hoehe)
+      Led::ids[i] = Led::basis_farbe;
+    else  
+      Led::ids[i] = CRGB::Black;
+  }
+  FastLED.show();
+}
+
 CRGB Led::ids[NUM_LEDS];
 int Led::display_mode = 0;
+CRGB Led::basis_farbe = CRGB::White;

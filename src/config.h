@@ -11,4 +11,13 @@
 #define BLE_CHARACTERISTIC_UUID "beaf"
 
 
+#define LED_CASE_OFF    0
+#define LED_CASE_1      1
+#define LED_CASE_2      2
+#define LED_CASE_3      3
+#define LED_CASE_4      4
+#define LED_CASE_5      5
+#define LED_CASE_6      6
+
+
 #endif
