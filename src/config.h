@@ -5,9 +5,12 @@
 #define LED_CHIPSET WS2812B
 #define LED_PORT    18
 #define NUM_LEDS    20
-#define BRIGTHNESS  50
+#define BRIGTHNESS  5
 
-#define BT_DEVICENAME           "LED-Lampe"
+#define BT_DEVICENAME       "LED-Lampe"
+
+#define BEFEHL_AN           "an"
+#define BEFEHL_AUS          "aus"
 
 #define BEFEHL_FARBE_BLAU   "blau"
 #define BEFEHL_FARBE_ROT    "rot"

@@ -1,5 +1,4 @@
 // Verknüpfung der Programmierbarendateien miteinander, damit diese zusammenarbeiten können
-#include <string.h>
 #include "bluetooth.h"
 #include "config.h"
 #include "led.h"
@@ -23,20 +22,24 @@ void Blt::setup() {
  * @brief Verarbeitet den naechsten Befehl und aktualisiert ggf. den Modus
  * @param [in] value Der Input als String
  */
-void Blt::next_command(std::string &value) {
+void Blt::next_command(char* value, uint8_t length) {
 
   // Befehl zur Behebung fehlerhafter Formatierungen, wenn ein Fehler vorliegt 
-  if (!value.empty() && value.back() == '\n') {
-    value.pop_back();
+  if(value[length -1] == '\n') {
+    value[length -1] = 0;
+    --length;
     // Pruefen auf alternative Formatierung und ggf. auch Entfernung
-    if (value.back() == '\r')
-      value.pop_back();
+    if (value[length -1] == '\r') {
+      value[length -1] = 0;
+      --length;
+    }
   }
+  
   // Informationsausgabe für eine einfachere Fehlersuche während der Laufzeit
-  if (value.length() > 0)
+  if (length > 0)
   {
     Serial.print("[New value] ");
-    for (int i = 0; i < value.length(); i++)
+    for (int i = 0; i < length; i++)
     {
       Serial.print(value[i]);
     }
@@ -44,34 +47,64 @@ void Blt::next_command(std::string &value) {
   }
 
   // Schleife zum Vergleichen der LED Modi (AN = led_on) und (AUS = led_off)
-  if (value.compare("led_on") == 0) 
+  if (strcmp(value,BEFEHL_AN) == 0) 
     Led::display_mode = 1;
-  else if (value.compare("led_off") == 0)
+  else if (strcmp(value, BEFEHL_AUS) == 0)
     Led::display_mode = 0;
 
+  uint8_t helligkeit = BRIGTHNESS;
+  if(value[0]== '%'){
+    //Pruefe ob die nachfolgenden Zeichen alles Zahlen sind
+    helligkeit = atoi(value + 1);
+    // Wenn außerhalb Wertebereich, zurücksetzen auf standardwert
+    if( !(helligkeit >= 0 && helligkeit <= 255))
+      helligkeit = BRIGTHNESS;
+    FastLED.setBrightness(helligkeit);
+  }
+
   //Else-if Statements zum aendern der Fabe von den LEDs
-  else if (value.compare(BEFEHL_FARBE_BLAU) == 0) 
+  else if (strcmp(value,BEFEHL_FARBE_BLAU) == 0) {
     Led::basis_farbe = CRGB::Aquamarine;
-  else if (value.compare(BEFEHL_FARBE_ROT) == 0)
+    return;
+  }
+  else if (strcmp(value,BEFEHL_FARBE_ROT) == 0) {
     Led::basis_farbe = CRGB::DarkRed;
-  else if (value.compare(BEFEHL_FARBE_GRUEN) == 0) 
+    return;
+  }
+  else if (strcmp(value,BEFEHL_FARBE_GRUEN) == 0) {
     Led::basis_farbe = CRGB::DarkGreen;
-  else if (value.compare(BEFEHL_FARBE_GELB) == 0) 
+    return;
+  }
+  else if (strcmp(value,BEFEHL_FARBE_GELB) == 0) {
     Led::basis_farbe = CRGB::Yellow;
-  else if (value.compare(BEFEHL_FARBE_VIOLET) == 0) 
+    return;
+  }
+  else if (strcmp(value,BEFEHL_FARBE_VIOLET) == 0) {
     Led::basis_farbe = CRGB::DarkViolet;
-  else if (value.compare(BEFEHL_FARBE_ROSA) == 0) 
+    return;
+  }
+  else if (strcmp(value,BEFEHL_FARBE_ROSA) == 0) {
     Led::basis_farbe = CRGB::MistyRose;
+    return;
+  }
 
   // Else-if Statements zum aendern des Modus der LEDs
-  else if (value.compare(BEFEHL_MODUS_1) == 0)
+  else if (strcmp(value,BEFEHL_MODUS_1) == 0) {
     Led::display_mode = 1;
-  else if (value.compare(BEFEHL_MODUS_1) == 0)
+    return;
+  }
+  else if (strcmp(value,BEFEHL_MODUS_2) == 0) {
     Led::display_mode = 2;
-  else if (value.compare(BEFEHL_MODUS_1) == 0)
+    return;
+  }
+  else if (strcmp(value,BEFEHL_MODUS_3) == 0) {
     Led::display_mode = 3;
-  else if (value.compare(BEFEHL_MODUS_1) == 0)
+    return;
+  }
+  else if (strcmp(value,BEFEHL_MODUS_4) == 0) {
     Led::display_mode = 4;
+    return;
+  }
 }
 
 /**
@@ -88,8 +121,7 @@ void Blt::loop() {
   
   // Check-Methode, ob die neuen Daten ausgelesen wurden
   if (index >= 1) {
-    std::string str(input);
-    Blt::next_command(str);
+    Blt::next_command(input, index);
   }
 
 }

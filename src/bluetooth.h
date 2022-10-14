@@ -3,7 +3,6 @@
 #define BLUETOOTH_H
 
 #include "BluetoothSerial.h"
-#include <NimBLEDevice.h>
 
 class Blt {
 
@@ -11,7 +10,7 @@ class Blt {
         static BluetoothSerial SerialBT;
 
     public:
-        static void next_command(std::string &);
+        static void next_command(char *, uint8_t );
         static void setup();
         static void loop();
 };
