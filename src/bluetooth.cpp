@@ -52,14 +52,16 @@ void Blt::next_command(char* value, uint8_t length) {
   else if (strcmp(value, BEFEHL_AUS) == 0)
     Led::display_mode = 0;
 
-  uint8_t helligkeit = BRIGTHNESS;
+
   if(value[0]== '%'){
+    uint64_t helligkeit = BRIGTHNESS;
+    char *end;
     //Pruefe ob die nachfolgenden Zeichen alles Zahlen sind
-    helligkeit = atoi(value + 1);
+    helligkeit = strtol(value + 1, &end, 10);
     // Wenn außerhalb Wertebereich, zurücksetzen auf standardwert
-    if( !(helligkeit >= 0 && helligkeit <= 255))
-      helligkeit = BRIGTHNESS;
-    FastLED.setBrightness(helligkeit);
+    helligkeit = (helligkeit > 255) ? 255 : helligkeit;
+    
+    Led::change_brightness(helligkeit); 
   }
 
   //Else-if Statements zum aendern der Fabe von den LEDs

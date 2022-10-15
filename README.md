@@ -34,3 +34,9 @@ Wichtige Dateien für Programmierung der Lampenfunktionen inklusive der Bluetoot
 * [main.cpp](.\src\main.cpp)
 
 https://gcc.gnu.org/onlinedocs/cpp/Header-Files.html
+
+# Befehle zur Kommunikation
+
+Die Befehle zur Umschaltung sind in der [config.h](.\src\config.h) zu finden. Dort sind auch alle verfügbaren Modi aufgelistet.
+Mit "an" und "aus" lassen sich die Lichter anschalten.
+In der [led.cpp](.\src\led.cpp) unten mit display_mode=1 leuchtet die Lampe standardmäßig. Mit 0 ist sie aus.

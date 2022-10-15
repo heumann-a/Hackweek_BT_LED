@@ -82,6 +82,14 @@ void Led::animation_loop() {
 }
 
 /**
+ * @brief Aendert die Helligkeit aller LED des Streifen
+ * @param [in] helligkeit Neuer Wert der Helligkeit im Wertebereich von 0-255 für 0-100%
+ */
+void Led::change_brightness(uint8_t helligkeit) {
+  FastLED.setBrightness(helligkeit);
+}
+
+/**
  * @brief Generiert einen Regenbogeneffekt ueber den kompletten Streifen mittles HSV des Farbspektrums
  * @param [in] initialhue Nächste HSV Farbwert für die erste LED
  * @param [in] deltahue Abstufung der Farben mit Delta E (auch Delta Wert genannt, dies ist ein Maß für den empfundenen Farbabstand(die Farbdifferenz),
