@@ -1,10 +1,11 @@
-#include <string.h>
+// Verknüpfung der Programmierbarendateien miteinander, damit diese zusammenarbeiten können
 #include "bluetooth.h"
 #include "config.h"
 #include "led.h"
 
 
-/* Prueft ob Bluetooth konfiguration im Projekt aktiviert ist */
+
+/* Prueft ob die Bluetooth Konfiguration im Projekt aktiviert ist */
 #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 #endif
@@ -44,9 +45,13 @@ void Blt::setup_ble() {
   pAdvertising->setScanResponse(true);
   pAdvertising->setMinPreferred(0x06);  // functions that help with iPhone connections issue
   pAdvertising->setMaxPreferred(0x12);
+  
+ * @brief Initialisierung des Bluetooth Modul
+ */
+void Blt::setup() {
 
-  BLEDevice::startAdvertising();
-  Serial.println("Characteristic defined! Now you can read it in your phone!");
+    Blt::SerialBT.begin(BT_DEVICENAME);
+    Serial.println("Bluetooth Started! Ready to pair...");
 }
 
 /**
@@ -62,39 +67,101 @@ void Blt::next_command(std::string &value) {
     if (value.back() == '\r')
       value.pop_back();
   }
+}
 
-  // For Debugging Purpose
-  if (value.length() > 0)
+/**
+ * @brief Verarbeitet den naechsten Befehl und aktualisiert ggf. den Modus
+ * @param [in] value Der Input als String
+ */
+void Blt::next_command(char* value, uint8_t length) {
+
+  // Befehl zur Behebung fehlerhafter Formatierungen, wenn ein Fehler vorliegt 
+  if(value[length -1] == '\n') {
+    value[length -1] = 0;
+    --length;
+    // Pruefen auf alternative Formatierung und ggf. auch Entfernung
+    if (value[length -1] == '\r') {
+      value[length -1] = 0;
+      --length;
+    }
+  }
+  
+  // Informationsausgabe für eine einfachere Fehlersuche während der Laufzeit
+  if (length > 0)
   {
     Serial.print("[New value] ");
-    for (int i = 0; i < value.length(); i++)
+    for (int i = 0; i < length; i++)
     {
       Serial.print(value[i]);
     }
     Serial.println();
   }
 
-  if (value.compare("led_on") == 0) 
-    // Led::display_mode = Config::current_mode;
+  // Schleife zum Vergleichen der LED Modi (AN = led_on) und (AUS = led_off)
+  if (strcmp(value,BEFEHL_AN) == 0) 
     Led::display_mode = 1;
-  else if (value.compare("led_off") == 0)
+  else if (strcmp(value, BEFEHL_AUS) == 0)
     Led::display_mode = 0;
-  else if (value.compare("1") == 0) 
+
+
+  if(value[0]== '%'){
+    uint64_t helligkeit = BRIGTHNESS;
+    char *end;
+    //Pruefe ob die nachfolgenden Zeichen alles Zahlen sind
+    helligkeit = strtol(value + 1, &end, 10);
+    // Wenn außerhalb Wertebereich, zurücksetzen auf standardwert
+    helligkeit = (helligkeit > 255) ? 255 : helligkeit;
+    
+    Led::change_brightness(helligkeit); 
+  }
+
+  //Else-if Statements zum aendern der Fabe von den LEDs
+  else if (strcmp(value,BEFEHL_FARBE_BLAU) == 0) {
+    Led::basis_farbe = CRGB::Aquamarine;
+    return;
+  }
+  else if (strcmp(value,BEFEHL_FARBE_ROT) == 0) {
+    Led::basis_farbe = CRGB::DarkRed;
+    return;
+  }
+  else if (strcmp(value,BEFEHL_FARBE_GRUEN) == 0) {
+    Led::basis_farbe = CRGB::DarkGreen;
+    return;
+  }
+  else if (strcmp(value,BEFEHL_FARBE_GELB) == 0) {
+    Led::basis_farbe = CRGB::Yellow;
+    return;
+  }
+  else if (strcmp(value,BEFEHL_FARBE_VIOLET) == 0) {
+    Led::basis_farbe = CRGB::DarkViolet;
+    return;
+  }
+  else if (strcmp(value,BEFEHL_FARBE_ROSA) == 0) {
+    Led::basis_farbe = CRGB::MistyRose;
+    return;
+  }
+
+  // Else-if Statements zum aendern des Modus der LEDs
+  else if (strcmp(value,BEFEHL_MODUS_1) == 0) {
     Led::display_mode = 1;
-  else if (value.compare("2") == 0)
+    return;
+  }
+  else if (strcmp(value,BEFEHL_MODUS_2) == 0) {
     Led::display_mode = 2;
-  else if (value.compare("3") == 0) 
+    return;
+  }
+  else if (strcmp(value,BEFEHL_MODUS_3) == 0) {
     Led::display_mode = 3;
-  else if (value.compare("4") == 0) 
+    return;
+  }
+  else if (strcmp(value,BEFEHL_MODUS_4) == 0) {
     Led::display_mode = 4;
-  else if (value.compare("5") == 0)
-    Led::display_mode = 5;
-  
+    return;
+  }
 }
 
 /**
- * @brief Initialize the BLE or BLT environment.
- * @param [in] blt_active Activates BLT if true.
+ * @brief Schleife vom Bluetooth zum Lesen neuer Befehle und Weitergabe der Befehle
  */
 void Blt::loop() {
   char input[50] = {};
@@ -105,10 +172,9 @@ void Blt::loop() {
       input[index++]= Blt::SerialBT.read();
   }
   
-  // Check if new Data was read
+  // Check-Methode, ob die neuen Daten ausgelesen wurden
   if (index >= 1) {
-    std::string str(input);
-    Blt::next_command(str);
+    Blt::next_command(input, index);
   }
 
 }
