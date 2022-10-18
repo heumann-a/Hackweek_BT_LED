@@ -2,11 +2,18 @@
 #ifndef LED_CONFIG_H
 #define LED_CONFIG_H
 
+// ===============
+// DO NOT CHANGE
+#define BLE_SERVICE_UUID    "ABCD"
+#define BLE_CHAR_UUID       "1234"
+// ===============
+
 #define LED_CHIPSET WS2812B
 #define LED_PORT    18
-#define NUM_LEDS    20
-#define BRIGTHNESS  5
+#define NUM_LEDS    15
+#define BRIGTHNESS  20
 
+#define BLE_MODUS           false
 #define BT_DEVICENAME       "LED-Lampe"
 
 #define BEFEHL_AN           "an"

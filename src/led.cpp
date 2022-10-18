@@ -53,14 +53,14 @@ void Led::animation_loop() {
     case 3:
       static uint8_t lauflicht_base = 0;
       Led::lauflicht(lauflicht_base);
-      EVERY_N_MILLISECONDS( 100 ) { lauflicht_base = (++lauflicht_base) % NUM_LEDS; }
+      EVERY_N_MILLISECONDS( 50 ) { lauflicht_base = (++lauflicht_base) % NUM_LEDS; }
       break;
 
     case 4:
       static bool increment = true;
       static uint8_t hoehe = 0;
       Led::hoch_runter(hoehe);
-      EVERY_N_MILLISECONDS( 100 ) { 
+      EVERY_N_MILLISECONDS( 50 ) { 
         if (increment){
           ++hoehe;
           if(hoehe == NUM_LEDS)

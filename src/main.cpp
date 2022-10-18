@@ -20,7 +20,7 @@ void setup() {
   Serial.println("Starting up...");
 
   // Funktion für Bluetooth
-  Blt::setup(true);
+  Blt::setup();
   // Funktion für LED-Streifen
   Led::setup();
 }
