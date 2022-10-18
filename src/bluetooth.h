@@ -9,6 +9,7 @@ class Blt {
     private:
         static BluetoothSerial SerialBT;
 
+        static void setup_ble();
     public:
         static void next_command(char *, uint8_t );
         static void setup();

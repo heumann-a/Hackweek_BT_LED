@@ -3,7 +3,7 @@
 
 
 /**
- * @brief Initialisiert LED-Streifen mit spezifierten Infos aus der config
+ * @brief Initialisiert LED-Streifen mit spezifierten Infos aus der Konfig
  */
 void Led::setup() {
 
@@ -33,7 +33,7 @@ void Led::color(CRGB new_color) {
  * @brief Switch-Statement, das prueft welcher Modus aktuell genutzt wird. Führt dementsprechend die Funktion aus.
  */
 void Led::animation_loop() {
-  
+
   switch (Led::display_mode)
   {
     case 0:

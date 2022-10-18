@@ -21,6 +21,7 @@ class Led {
         static void color(CRGB);
         static void animation_loop();
         static void change_brightness(uint8_t);
+
 };
 
 #endif
